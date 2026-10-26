@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smart Stock Tienda</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1F3864">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Smart Stock">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{--bg:#EEF1F6;--card:#fff;--ink:#1d2433;--mute:#667085;--navy:#1F3864;--line:#E3E7ED;--soft:#F2F4F7;--g:#2E9E5B;--a:#E8A317;--r:#D64545;--rb:#FADBD8;--gb:#D5F5E3;--ab:#FFF4D6;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#1a212c;--ink:#e8ecf3;--mute:#9aa6b8;--navy:#4A74C9;--line:#2a3342;--soft:#232c3a;--rb:#4a2323;--gb:#1d3a2a;--ab:#3a3217}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#1a212c;--ink:#e8ecf3;--mute:#9aa6b8;--navy:#4A74C9;--line:#2a3342;--soft:#232c3a;--rb:#4a2323;--gb:#1d3a2a;--ab:#3a3217}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:15px}
+.wrap{max-width:460px;margin:0 auto;padding:0 12px 96px}
+.top{background:var(--navy);color:#fff;margin:0 -12px 12px;padding:calc(12px + env(safe-area-inset-top,0px)) 14px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.top h1{margin:0;font-size:17px}.top small{font-size:11px;opacity:.85;display:block}.mode{font-size:11px;background:rgba(255,255,255,.18);border-radius:10px;padding:3px 8px;white-space:nowrap}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+h2{font-size:15px;margin:0 0 8px;color:var(--navy)}h3{font-size:13px;margin:10px 0 6px;color:var(--navy)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 2px;text-align:center}.kpi b{display:block;font-size:19px}.kpi span{font-size:10px;color:var(--mute)}
+.c-g{color:var(--g)}.c-a{color:var(--a)}.c-r{color:var(--r)}.c-n{color:var(--mute)}.b{font-weight:bold}
+.msg{border-radius:10px;padding:9px 11px;font-size:13px;margin-bottom:10px}.m-r{background:var(--rb)}.m-g{background:var(--gb)}.m-a{background:var(--ab)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--soft);border-radius:10px;padding:9px 11px;margin-bottom:7px;font-size:14px}.item small,.sm{color:var(--mute);font-size:12px}
+.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:var(--navy);color:#fff;font-size:15px;font-weight:bold;margin-top:8px;font-family:inherit}.btn.o{background:var(--card);color:var(--navy);border:1px solid var(--navy)}.btn.s{padding:8px 12px;font-size:13px;width:auto;display:inline-block;margin:6px 6px 0 0}.btn.d{background:var(--r);color:#fff;border:0}
+input,select,textarea{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font-size:14px;font-family:inherit;margin:3px 0 7px}
+input[type=number]{text-align:right}label{font-size:12px;color:var(--mute);display:block}.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.acc{width:100%;text-align:left;background:var(--soft);border:0;border-radius:10px;padding:10px 12px;margin-bottom:7px;font-size:14px;color:var(--ink);font-family:inherit}.acc small{display:block;color:var(--mute);font-size:12px;margin-top:2px}
+.det{background:var(--soft);border-radius:10px;padding:8px 11px;margin:-4px 0 8px;font-size:13px}.det table{width:100%;border-collapse:collapse}.det td{padding:5px 0;border-bottom:1px solid var(--line)}.det td:not(:first-child){text-align:right}
+.seg{display:flex;gap:6px;margin-bottom:10px}.seg button{flex:1;padding:9px 4px;border-radius:10px;border:1px solid var(--navy);background:var(--card);color:var(--navy);font-size:13px;font-weight:bold}.seg button.on{background:var(--navy);color:#fff}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px}.chips button{white-space:nowrap;border:1px solid var(--navy);background:var(--card);color:var(--navy);border-radius:16px;padding:6px 12px;font-size:12px;font-family:inherit}.chips button.on{background:var(--navy);color:#fff}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}.tabs div{max-width:460px;margin:0 auto;display:flex}.tabs button{flex:1;border:0;background:transparent;color:var(--mute);font-size:11px;padding:8px 0;font-weight:bold;font-family:inherit}.tabs button.on{color:var(--navy);border-top:3px solid var(--navy)}
+#upd{position:fixed;left:12px;right:12px;bottom:calc(66px + env(safe-area-inset-bottom,0px));max-width:436px;margin:0 auto;background:var(--navy);color:#fff;border-radius:12px;padding:10px 12px;font-size:13px;display:none;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 4px 14px rgba(0,0,0,.3)}#upd.on{display:flex}#upd button{border:0;border-radius:8px;background:#fff;color:var(--navy);font-weight:bold;padding:8px 12px;font-size:13px;font-family:inherit}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;background:#222;color:#fff;padding:9px 14px;border-radius:20px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;max-width:90%;text-align:center}#toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="top"><div style="display:flex;align-items:center;gap:10px"><img src="icon-192.png" alt="" width="38" height="38" style="border-radius:9px"><div><h1>Smart Stock</h1><small>Tienda · Control de inventarios · v<span id="ver"></span></small></div></div><span class="mode">Solo en este celular</span></div><div id="app"></div></div>
+<nav class="tabs"><div id="tabs"></div></nav><div id="upd"><span>Hay una versión nueva de Smart Stock Tienda.</span><button onclick="location.reload()">Actualizar</button></div><div id="toast"></div>
+<script>
+var VER="1.0",NOV=[["1.0","Primera versión de Smart Stock Tienda: catálogo de productos con importación desde archivo CSV, salidas por producto, stock con semáforo, compra sugerida, facturas de compra, conteo físico parcial, respaldo y aviso de versión nueva."]];
+var DEF={t0:0,igv:.18,pvs:[],prods:[]};
+var COLS=["salidas","facturas","conteos"];
+var UN=["und","caja","paq","docena","par","rollo","bolsa","kg","g","m","L","gal"];
+var TITULAR="";
+var ST={cfg:null,salidas:[],facturas:[],conteos:[],S:{},pm:{},tab:"ini",sub:"sug",q:"",cat:"",fil:"",lim:30,op:null,of:null,conf:null,nov:false,cart:[],tipo:"Venta",fd:null,cm:false,cnt:{},add:false,imp:null,mas:null};
+function cl(o){return JSON.parse(JSON.stringify(o))}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function f(n){return(+(+n).toFixed(2)).toString().replace(".",",")}
+function m(n){return"S/ "+(+n).toFixed(2)}
+function iso(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+function fd(s){var p=String(s).split("-");return p.length==3?p[2]+"/"+p[1]+"/"+p[0]:s}
+function norm(s){return String(s==null?"":s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+function num(s){if(s==null)return null;var t=String(s).replace(/[^0-9,.\-]/g,"");if(t===""||t==="-")return null;if(/,\d{1,2}$/.test(t)&&t.indexOf(".")<0)t=t.replace(",",".");t=t.replace(/,/g,"");var n=parseFloat(t);return isNaN(n)?null:n}
+function opts(a,v){return a.map(function(x){return'<option'+(x==v?' selected':'')+'>'+esc(x)+'</option>'}).join("")}
+function toast(t){var e=$("toast");e.textContent=t;e.className="on";clearTimeout(toast.t);toast.t=setTimeout(function(){e.className=""},2600)}
+function ls(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem("sst_"+k));localStorage.setItem("sst_"+k,JSON.stringify(v))}catch(e){if(v!==undefined)toast("No se pudo guardar en este celular");return null}}
+/* ---------- datos ---------- */
+function loadLocal(){ST.cfg=ls("cfg")||cl(DEF);["igv","pvs","t0","prods"].forEach(function(k){if(ST.cfg[k]==null)ST.cfg[k]=cl(DEF[k])});COLS.forEach(function(c){ST[c]=ls(c)||[]});idx()}
+function idx(){ST.pm={};ST.cfg.prods.forEach(function(p){ST.pm[p.id]=p})}
+function saveCfg(){ls("cfg",ST.cfg);idx()}
+function put(c,o){var a=ST[c],k=-1;a.forEach(function(x,i){if(x.id==o.id)k=i});if(k<0)a.push(o);else a[k]=o;a.sort(function(x,y){return x.ts-y.ts});ls(c,a)}
+function del(c,id){ST[c]=ST[c].filter(function(x){return x.id!=id});ls(c,ST[c])}
+function arm(c,id){var k=c+id;if(ST.conf!=k){ST.conf=k;render();return}ST.conf=null;del(c,id);render();toast("Anulado")}
+function P(id){return ST.pm[id]||{id:id,n:"(producto eliminado)",u:"",cod:"",min:0,max:0,pr:0,pv:0}}
+/* ---------- cálculo ---------- */
+function stockAll(){var base={},s={};ST.cfg.prods.forEach(function(p){base[p.id]=ST.cfg.t0||0;s[p.id]=+p.s0||0});
+ ST.conteos.forEach(function(c){for(var id in c.q){if(base[id]!=null&&c.ts>=base[id]){base[id]=c.ts;s[id]=+c.q[id]}}});
+ ST.facturas.forEach(function(x){x.it.forEach(function(l){if(base[l[0]]!=null&&x.ts>base[l[0]])s[l[0]]+=+l[1]})});
+ ST.salidas.forEach(function(x){x.it.forEach(function(l){if(base[l[0]]!=null&&x.ts>base[l[0]])s[l[0]]-=+l[1]})});
+ for(var k in s)s[k]=Math.round(Math.max(0,s[k])*1000)/1000;return s}
+function est(p,s){var a=+p.min||0;if(a<=0)return"n";return s<a?"r":(s<=a*1.5?"a":"g")}
+function obj(p){var mx=+p.max||0,a=+p.min||0;return mx>0?mx:a*2}
+function lab(x){return x=="r"?"Comprar":x=="a"?"Revisar":x=="g"?"Adecuado":"Sin mínimo"}
+function sug(){var L=[];ST.cfg.prods.forEach(function(p){var x=est(p,ST.S[p.id]);if(x=="r"||x=="a"){var q=Math.round((obj(p)-ST.S[p.id])*10)/10;if(q>0)L.push({i:p.id,q:q,x:x})}});L.sort(function(a,b){return(a.x=="r"?0:1)-(b.x=="r"?0:1)});return L}
+function lista(q,cat,fil){var t=norm(q);return ST.cfg.prods.filter(function(p){if(cat&&p.cat!=cat)return false;if(t&&norm(p.n+" "+(p.cod||"")).indexOf(t)<0)return false;if(fil){var x=est(p,ST.S[p.id]);if(fil=="c"&&x!="r")return false;if(fil=="r"&&x!="a")return false}return true})}
+/* ---------- búsqueda para agregar productos ---------- */
+function busca(ctx,v){var h="",t=norm(v);if(t.length>=2){var L=lista(v,"","").slice(0,8);h=L.length?L.map(function(p){return'<div class="item"><span>'+esc(p.n)+'<br><small>'+esc(p.cod||"")+' · en stock: '+f(ST.S[p.id])+' '+esc(p.u)+'</small></span><button class="btn s" style="margin:0" onclick="addC(\''+ctx+'\',\''+p.id+'\')">Agregar</button></div>'}).join(""):'<div class="sm" style="margin-bottom:6px">No hay productos con ese nombre.</div>'}$("res").innerHTML=h}
+function addC(ctx,id){var p=P(id);if(ctx=="s"){var e=ST.cart.filter(function(l){return l.i==id})[0];if(e)e.q+=1;else ST.cart.push({i:id,q:1,p:+p.pv||0})}else{var e2=ST.fd.it.filter(function(l){return l.i==id})[0];if(e2)e2.q+=1;else ST.fd.it.push({i:id,q:1,p:+p.pr||0})}render()}
+/* ---------- Inicio ---------- */
+function vVacio(){return'<div class="card"><h2>Empiece aquí</h2><div class="sm" style="margin-bottom:8px">Todavía no hay productos. Cargue su lista desde un archivo CSV (Excel: «Guardar como» → CSV) o agregue el primero.</div><button class="btn" onclick="ST.mas=\'imp\';go(\'mas\')">Importar productos (CSV)</button><button class="btn o" onclick="ST.add=true;go(\'stk\')">Agregar un producto</button><button class="btn o" onclick="loadEj()">Cargar productos de ejemplo</button></div>'}
+function vIni(){var Pd=ST.cfg.prods;if(!Pd.length)return vVacio();var L=sug(),r=0,a=0,h="";
+ Pd.forEach(function(p){var x=est(p,ST.S[p.id]);if(x=="r")r++;if(x=="a")a++});
+ if(!ST.conteos.length)h+='<div class="msg m-a"><b>Antes de empezar:</b> haga el conteo físico en la pestaña Stock. Mientras no se haga, el sistema parte de cero.</div>';
+ else if(r)h+='<div class="msg m-r"><b>Alerta:</b> '+r+' producto(s) bajo el mínimo.</div>';
+ var td=iso(),n=0,tot=0,v30={},lim=Date.now()-30*864e5;
+ ST.salidas.forEach(function(s){if(s.tipo=="Venta"){s.it.forEach(function(l){if(s.fecha==td){n+=l[1];tot+=l[1]*l[2]}if(s.ts>lim)v30[l[0]]=(v30[l[0]]||0)+l[1]})}});
+ h+='<div class="kpis"><div class="kpi"><b>'+Pd.length+'</b><span>Productos</span></div><div class="kpi"><b class="c-r">'+r+'</b><span>Críticos</span></div><div class="kpi"><b class="c-a">'+a+'</b><span>Por revisar</span></div><div class="kpi"><b>'+L.length+'</b><span>Compras sugeridas</span></div></div>';
+ h+='<div class="card"><h2>Compra sugerida</h2>'+(L.length?L.slice(0,8).map(function(x){var p=P(x.i);return'<div class="item"><span>'+esc(p.n)+'<br><small class="c-'+x.x+'">'+lab(x.x)+'</small></span><b>'+f(x.q)+' '+esc(p.u)+'</b></div>'}).join("")+(L.length>8?'<div class="sm">y '+(L.length-8)+' más…</div>':'')+'<button class="btn" onclick="irFac()">Registrar factura de esta compra</button>':'<div class="sm">No hay compras pendientes.</div>')+'</div>';
+ h+='<div class="card"><h2>Ventas de hoy</h2><div class="item"><span>Unidades vendidas</span><b>'+f(n)+'</b></div><div class="item"><span>Total vendido</span><b>'+m(tot)+'</b></div></div>';
+ var top=Object.keys(v30).sort(function(x,y){return v30[y]-v30[x]}).slice(0,5);
+ if(top.length)h+='<div class="card"><h2>Más vendidos (30 días)</h2>'+top.map(function(id){var p=P(id);return'<div class="item"><span>'+esc(p.n)+'</span><b>'+f(v30[id])+' '+esc(p.u)+'</b></div>'}).join("")+'</div>';
+ return h}
+/* ---------- Salidas ---------- */
+function vSal(){if(!ST.cfg.prods.length)return vVacio();var h='<div class="card"><h2>Registrar salida</h2><div class="g2"><div><label>Tipo</label><select onchange="ST.tipo=this.value;render()">'+opts(["Venta","Merma"],ST.tipo)+'</select></div><div><label>Fecha</label><input type="date" id="sf" value="'+iso()+'"></div></div><label>Buscar producto o código</label><input id="bq" placeholder="Escriba al menos 2 letras" oninput="busca(\'s\',this.value)"><div id="res"></div>';
+ ST.cart.forEach(function(l,k){var p=P(l.i);h+='<div class="item" style="display:block"><div style="display:flex;justify-content:space-between"><b>'+esc(p.n)+'</b><button class="btn s d" style="margin:0;padding:3px 9px" onclick="ST.cart.splice('+k+',1);render()">×</button></div><div class="g2"><div><label>Cantidad ('+esc(p.u)+')</label><input type="number" step="any" inputmode="decimal" value="'+l.q+'" oninput="ST.cart['+k+'].q=parseFloat(this.value)||0;totS()"></div>'+(ST.tipo=="Venta"?'<div><label>Precio (S/)</label><input type="number" step="0.1" inputmode="decimal" value="'+l.p+'" oninput="ST.cart['+k+'].p=parseFloat(this.value)||0;totS()"></div>':'<div></div>')+'</div></div>'});
+ h+=(ST.cart.length?'<div class="item"><span>Total</span><b id="tt"></b></div><button class="btn" onclick="saveSal()">Guardar '+(ST.tipo=="Venta"?"venta":"merma")+'</button>':'<div class="sm">Busque un producto para agregarlo.</div>')+'</div>';
+ h+='<div class="card"><h2>Últimas salidas</h2>'+(ST.salidas.length?ST.salidas.slice(-8).reverse().map(function(s){var t=0,u=0;s.it.forEach(function(l){t+=l[1]*l[2];u+=l[1]});return'<div class="item"><span>'+fd(s.fecha)+' · '+s.tipo+'<br><small>'+s.it.length+' producto(s) · '+f(u)+' unidades'+(s.tipo=="Venta"?' · '+m(t):'')+'</small></span><button class="btn s d" style="margin:0" onclick="arm(\'salidas\',\''+s.id+'\')">'+(ST.conf=="salidas"+s.id?"Tocar de nuevo":"Anular")+'</button></div>'}).join(""):'<div class="sm">Aún no hay salidas.</div>')+'</div>';return h}
+function totS(){var t=0;ST.cart.forEach(function(l){t+=l.q*(ST.tipo=="Venta"?l.p:0)});if($("tt"))$("tt").textContent=ST.tipo=="Venta"?m(t):"—"}
+function saveSal(){if(!ST.cart.length||ST.cart.some(function(l){return!(l.q>0)})){toast("Revise las cantidades");return}
+ var ts=Date.now();put("salidas",{id:"s"+ts,ts:ts,fecha:$("sf").value||iso(),tipo:ST.tipo,it:ST.cart.map(function(l){return[l.i,l.q,ST.tipo=="Venta"?l.p:0]})});ST.cart=[];render();toast("Salida guardada")}
+/* ---------- Compras ---------- */
+function irFac(){var L=sug();ST.fd={no:"",pv:"",npn:"",npr:"",fecha:iso(),cond:"Contado",forma:"Efectivo",obs:"",foto:"",it:L.slice(0,40).map(function(x){return{i:x.i,q:x.q,p:+P(x.i).pr||0}})};ST.tab="com";ST.sub="nue";render()}
+function vCom(){if(!ST.cfg.prods.length)return vVacio();var h='<div class="seg">'+[["sug","Sugerida"],["nue","Nueva factura"],["lis","Facturas"]].map(function(s){return'<button class="'+(ST.sub==s[0]?"on":"")+'" onclick="ST.sub=\''+s[0]+'\';render()">'+s[1]+'</button>'}).join("")+'</div>';
+ if(ST.sub=="sug"){var L=sug();h+='<div class="card"><h2>Compra sugerida</h2>'+(L.length?L.slice(0,40).map(function(x){var p=P(x.i);return'<div class="item"><span>'+esc(p.n)+'<br><small>en stock '+f(ST.S[x.i])+' · mínimo '+f(p.min)+' · <span class="c-'+x.x+'">'+lab(x.x)+'</span></small></span><b>'+f(x.q)+' '+esc(p.u)+'</b></div>'}).join("")+(L.length>40?'<div class="sm">Se muestran 40 de '+L.length+'.</div>':'')+'<div class="det"><b>¿Cómo se calcula?</b> Compra = stock máximo − stock actual. Si un producto no tiene máximo, se usa el doble del mínimo.</div><button class="btn" onclick="irFac()">Registrar factura de esta compra</button>':'<div class="sm">No hay compras pendientes.</div>')+'</div>'}
+ else if(ST.sub=="nue")h+=vFac();else h+=vLis();return h}
+function vFac(){if(!ST.fd)ST.fd={no:"",pv:"",npn:"",npr:"",fecha:iso(),cond:"Contado",forma:"Efectivo",obs:"",foto:"",it:[]};var d=ST.fd,h='<div class="card"><h2>Registrar factura de compra</h2><label>Proveedor</label><select onchange="sf(\'pv\',this.value);render()"><option value="">Elegir…</option>'+ST.cfg.pvs.map(function(p){return'<option value="'+esc(p.n)+'"'+(d.pv==p.n?" selected":"")+'>'+esc(p.n)+'</option>'}).join("")+'<option value="__n"'+(d.pv=="__n"?" selected":"")+'>+ Proveedor nuevo…</option></select>';
+ if(d.pv=="__n")h+='<div class="g2"><div><label>Nombre</label><input value="'+esc(d.npn)+'" onchange="sf(\'npn\',this.value)"></div><div><label>RUC</label><input inputmode="numeric" maxlength="11" value="'+esc(d.npr)+'" onchange="sf(\'npr\',this.value)"></div></div>';
+ else if(d.pv){var pv=ST.cfg.pvs.filter(function(p){return p.n==d.pv})[0];h+='<div class="sm" style="margin:-4px 0 8px">RUC: '+esc(pv?pv.ruc:"")+'</div>'}
+ h+='<div class="g2"><div><label>N.º de factura</label><input placeholder="F001-00045" value="'+esc(d.no)+'" onchange="sf(\'no\',this.value)"></div><div><label>Fecha de emisión</label><input type="date" value="'+d.fecha+'" onchange="sf(\'fecha\',this.value)"></div><div><label>Condición de pago</label><select onchange="sf(\'cond\',this.value)">'+opts(["Contado","Crédito 15 días","Crédito 30 días"],d.cond)+'</select></div><div><label>Forma de pago</label><select onchange="sf(\'forma\',this.value)">'+opts(["Efectivo","Yape o Plin","Transferencia"],d.forma)+'</select></div></div><h3>Detalle de lo comprado</h3>';
+ d.it.forEach(function(l,k){var p=P(l.i);h+='<div class="item" style="display:block"><div style="display:flex;justify-content:space-between"><b>'+esc(p.n)+'</b><button class="btn s d" style="margin:0;padding:3px 9px" onclick="ST.fd.it.splice('+k+',1);render()">×</button></div><div class="g3"><div><label>Cantidad ('+esc(p.u)+')</label><input type="number" step="any" inputmode="decimal" value="'+l.q+'" oninput="ST.fd.it['+k+'].q=parseFloat(this.value)||0;tot()"></div><div><label>Precio sin IGV</label><input type="number" step="0.01" inputmode="decimal" value="'+l.p+'" oninput="ST.fd.it['+k+'].p=parseFloat(this.value)||0;tot()"></div><div><label>Subtotal</label><div class="b" style="padding:12px 0" id="sb'+k+'"></div></div></div></div>'});
+ h+='<label>Agregar otro producto</label><input id="bq" placeholder="Buscar producto o código" oninput="busca(\'f\',this.value)"><div id="res"></div><div class="det"><table><tr><td>Subtotal</td><td id="ts"></td></tr><tr><td>IGV ('+Math.round(ST.cfg.igv*100)+' %)</td><td id="ti"></td></tr><tr><td><b>Total</b></td><td id="tt" class="b"></td></tr></table></div><label>Observaciones</label><textarea rows="2" onchange="sf(\'obs\',this.value)" placeholder="Ej.: entrega incompleta">'+esc(d.obs)+'</textarea><label>Foto de la factura (opcional)</label><input type="file" accept="image/*" onchange="sf(\'foto\',this.files[0]?this.files[0].name:\'\')"><button class="btn" onclick="saveFac()">Guardar factura y sumar al stock</button><div class="sm" style="margin-top:6px">Al guardar, la mercadería se suma al inventario y el precio actualiza el costo del producto.</div></div>';return h}
+function sf(k,v){ST.fd[k]=v}
+function tot(){var s=0;ST.fd.it.forEach(function(l,k){var v=l.q*l.p;s+=v;var e=$("sb"+k);if(e)e.textContent=m(v)});if($("ts")){$("ts").textContent=m(s);$("ti").textContent=m(s*ST.cfg.igv);$("tt").textContent=m(s*(1+ST.cfg.igv))}}
+function saveFac(){var d=ST.fd,pn=d.pv=="__n"?d.npn.trim():d.pv,ruc="";
+ if(!pn){toast("Elija o escriba el proveedor");return}if(!d.no.trim()){toast("Escriba el n.º de factura");return}
+ if(!d.it.length||d.it.some(function(l){return!(l.q>0)})){toast("Revise las cantidades del detalle");return}
+ if(d.pv=="__n"){ruc=d.npr.trim();if(!/^\d{11}$/.test(ruc)){toast("El RUC debe tener 11 dígitos");return}ST.cfg.pvs.push({n:pn,ruc:ruc})}else{var p=ST.cfg.pvs.filter(function(x){return x.n==pn})[0];ruc=p?p.ruc:""}
+ if(ST.facturas.some(function(x){return x.no==d.no.trim()&&x.pv==pn})){toast("Esa factura ya está registrada");return}
+ var ts=Date.now();d.it.forEach(function(l){var pr=ST.pm[l.i];if(pr&&l.p>0)pr.pr=l.p});saveCfg();
+ put("facturas",{id:"f"+ts,ts:ts,no:d.no.trim(),pv:pn,ruc:ruc,fecha:d.fecha,cond:d.cond,forma:d.forma,es:d.cond=="Contado"?"Pagada":"Por pagar",obs:d.obs,foto:d.foto,igv:ST.cfg.igv,it:d.it.map(function(l){return[l.i,l.q,l.p]})});
+ ST.fd=null;ST.sub="lis";ST.of="f"+ts;render();toast("Factura guardada y stock actualizado")}
+function fsub(x){var s=0;x.it.forEach(function(l){s+=l[1]*l[2]});return s}
+function vLis(){var t=0,pp=0;ST.facturas.forEach(function(x){var v=fsub(x)*(1+(x.igv||ST.cfg.igv));t+=v;if(x.es=="Por pagar")pp+=v});
+ var h='<div class="kpis" style="grid-template-columns:1fr 1fr 1fr"><div class="kpi"><b>'+ST.facturas.length+'</b><span>Facturas</span></div><div class="kpi"><b style="font-size:15px">'+m(t)+'</b><span>Total con IGV</span></div><div class="kpi"><b class="c-a" style="font-size:15px">'+m(pp)+'</b><span>Por pagar</span></div></div>';
+ if(!ST.facturas.length)return h+'<div class="card sm">Aún no hay facturas registradas.</div>';
+ ST.facturas.slice().reverse().forEach(function(x){var s=fsub(x),g=x.igv||ST.cfg.igv,o=ST.of==x.id;h+='<button class="acc" onclick="ST.of='+(o?'null':"'"+x.id+"'")+';render()"><b>'+esc(x.no)+'</b> '+(o?"▲":"▼")+'<small>'+esc(x.pv)+' · '+fd(x.fecha)+' · '+m(s*(1+g))+' · <span class="b c-'+(x.es=="Pagada"?"g":"a")+'">'+x.es+'</span></small></button>';
+  if(o)h+='<div class="det"><table>'+x.it.map(function(l){var p=P(l[0]);return'<tr><td>'+esc(p.n)+'<br><small class="sm">'+f(l[1])+' '+esc(p.u)+' × '+m(l[2])+'</small></td><td>'+m(l[1]*l[2])+'</td></tr>'}).join("")+'<tr><td>Subtotal</td><td>'+m(s)+'</td></tr><tr><td>IGV</td><td>'+m(s*g)+'</td></tr><tr><td><b>Total</b></td><td><b>'+m(s*(1+g))+'</b></td></tr></table><div class="sm">RUC '+esc(x.ruc)+' · '+esc(x.cond)+' · '+esc(x.forma)+(x.obs?" · "+esc(x.obs):"")+(x.foto?" · Foto: "+esc(x.foto):"")+'</div>'+(x.es=="Por pagar"?'<button class="btn s" onclick="pagar(\''+x.id+'\')">Marcar como pagada</button>':'')+'<button class="btn s d" onclick="arm(\'facturas\',\''+x.id+'\')">'+(ST.conf=="facturas"+x.id?"Tocar de nuevo":"Anular")+'</button></div>'});return h}
+function pagar(id){var x=ST.facturas.filter(function(y){return y.id==id})[0];x.es="Pagada";put("facturas",x);render();toast("Factura pagada")}
+/* ---------- Stock ---------- */
+function vStk(){var h="",cats={};ST.cfg.prods.forEach(function(p){if(p.cat)cats[p.cat]=1});var cs=Object.keys(cats).sort();
+ h+='<div class="card"><input id="sq" placeholder="Buscar producto o código" value="'+esc(ST.q)+'" oninput="ST.q=this.value;ST.lim=30;lst()">';
+ h+='<div class="chips">'+[["","Todos"],["c","Críticos"],["r","Por revisar"]].map(function(c){return'<button class="'+(ST.fil==c[0]?"on":"")+'" onclick="ST.fil=\''+c[0]+'\';ST.lim=30;render()">'+c[1]+'</button>'}).join("")+'</div>';
+ if(cs.length)h+='<div class="chips"><button class="'+(ST.cat==""?"on":"")+'" onclick="ST.cat=\'\';ST.lim=30;render()">Todas las categorías</button>'+cs.map(function(c){return'<button class="'+(ST.cat==c?"on":"")+'" onclick="ST.cat=this.textContent;ST.lim=30;render()">'+esc(c)+'</button>'}).join("")+'</div>';
+ h+=(ST.cm?'<div class="msg m-a"><b>Conteo físico:</b> escriba lo que contó de cada producto. Los que deje vacíos no cambian.</div><button class="btn" onclick="saveCnt()">Guardar conteo</button><button class="btn o" onclick="ST.cm=false;ST.cnt={};render()">Cancelar</button>':'<button class="btn o" onclick="ST.cm=true;ST.cnt={};render()">Hacer conteo físico</button><button class="btn o" onclick="ST.add=!ST.add;render()">'+(ST.add?"Cerrar":"+ Agregar producto")+'</button>')+'</div>';
+ if(ST.add&&!ST.cm)h+=vAdd();
+ h+='<div id="lst">'+listaHTML()+'</div>';return h}
+function listaHTML(){var L=lista(ST.q,ST.cat,ST.fil),h='';if(!L.length)return'<div class="card sm">'+(ST.cfg.prods.length?'No hay productos con ese filtro.':'Aún no hay productos.')+'</div>';
+ h+='<div class="sm" style="margin:0 2px 6px">'+L.length+' producto(s)</div>';
+ L.slice(0,ST.lim).forEach(function(p){var s=ST.S[p.id],x=est(p,s);
+  if(ST.cm){h+='<div class="item"><span>'+esc(p.n)+'<br><small>Sistema: '+f(s)+' '+esc(p.u)+'</small></span><input type="number" step="any" inputmode="decimal" style="width:96px;margin:0" placeholder="Conteo" value="'+(ST.cnt[p.id]!=null?esc(ST.cnt[p.id]):"")+'" oninput="ST.cnt[\''+p.id+'\']=this.value"></div>';return}
+  var o=ST.op==p.id;h+='<button class="acc" onclick="tg(\''+p.id+'\')"><b>'+esc(p.n)+'</b> <span class="b c-'+x+'" style="float:right;font-size:12px">'+lab(x)+'</span><small>'+esc(p.cod||"sin código")+(p.cat?' · '+esc(p.cat):'')+' · Stock: <b>'+f(s)+' '+esc(p.u)+'</b>'+(+p.min?' · mín. '+f(p.min):'')+'</small></button>';
+  if(o)h+=vEd(p)});
+ if(L.length>ST.lim)h+='<button class="btn o" onclick="ST.lim+=30;lst()">Ver más ('+(L.length-ST.lim)+')</button>';return h}
+function lst(){$("lst").innerHTML=listaHTML()}
+function tg(id){ST.op=ST.op==id?null:id;render()}
+function vEd(p){var k=function(f2,lb,t,st){return'<div><label>'+lb+'</label><input '+(t||"")+' value="'+esc(p[f2]==null?"":p[f2])+'" onchange="ep(\''+p.id+'\',\''+f2+'\',this.value)"'+(st||"")+'></div>'};
+ return'<div class="det"><div class="g2">'+k("n","Nombre")+k("cod","Código")+'<div><label>Unidad</label><select onchange="ep(\''+p.id+'\',\'u\',this.value)">'+opts(UN.indexOf(p.u)<0?[p.u].concat(UN):UN,p.u)+'</select></div>'+k("cat","Categoría")+k("min","Stock mínimo",'type="number" step="any"')+k("max","Stock máximo",'type="number" step="any"')+k("pr","Costo (S/)",'type="number" step="0.01"')+k("pv","Precio de venta (S/)",'type="number" step="0.01"')+'</div>'+k("prov","Proveedor habitual")+'<button class="btn s d" onclick="arm2(\''+p.id+'\')">'+(ST.conf=="prod"+p.id?"Tocar de nuevo para quitar":"Quitar del catálogo")+'</button></div>'}
+function ep(id,k,v){var p=ST.pm[id];if(!p)return;if(["min","max","pr","pv"].indexOf(k)>=0){var n=num(v);p[k]=n==null?0:Math.max(0,n)}else p[k]=String(v).trim();if(k=="n"&&!p.n)p.n="(sin nombre)";saveCfg();render()}
+function arm2(id){if(ST.conf!="prod"+id){ST.conf="prod"+id;render();return}ST.conf=null;ST.cfg.prods=ST.cfg.prods.filter(function(p){return p.id!=id});saveCfg();ST.op=null;render();toast("Producto quitado")}
+function vAdd(){return'<div class="card"><h2>Agregar producto</h2><div class="g2"><div><label>Nombre</label><input id="an"></div><div><label>Código (opcional)</label><input id="ac"></div><div><label>Unidad</label><select id="au">'+opts(UN,"und")+'</select></div><div><label>Categoría</label><input id="at" list="cl"></div><div><label>Stock actual</label><input id="as" type="number" step="any" inputmode="decimal"></div><div><label>Stock mínimo</label><input id="am" type="number" step="any" inputmode="decimal"></div><div><label>Stock máximo</label><input id="ax" type="number" step="any" inputmode="decimal"></div><div><label>Costo (S/)</label><input id="ao" type="number" step="0.01" inputmode="decimal"></div><div><label>Precio de venta (S/)</label><input id="av" type="number" step="0.01" inputmode="decimal"></div></div><datalist id="cl">'+Object.keys(ST.cfg.prods.reduce(function(o,p){if(p.cat)o[p.cat]=1;return o},{})).map(function(c){return'<option value="'+esc(c)+'">'}).join("")+'</datalist><button class="btn" onclick="addP()">Guardar producto</button></div>'}
+function addP(){var n=$("an").value.trim();if(!n){toast("Escriba el nombre");return}var now=Date.now(),id="p"+now;
+ ST.cfg.prods.push({id:id,n:n,cod:$("ac").value.trim(),u:$("au").value,cat:$("at").value.trim(),min:Math.max(0,num($("am").value)||0),max:Math.max(0,num($("ax").value)||0),pr:Math.max(0,num($("ao").value)||0),pv:Math.max(0,num($("av").value)||0),s0:0});saveCfg();
+ var s=num($("as").value);if(s!=null&&s>=0){var q={};q[id]=s;put("conteos",{id:"c"+now,ts:now,fecha:iso(),q:q,ex:null})}
+ ST.add=false;render();toast("Producto agregado")}
+function saveCnt(){var q={},e=0,n=0,k=0;for(var id in ST.cnt){var v=num(ST.cnt[id]);if(v==null||v<0||!ST.pm[id])continue;q[id]=v;k++;var s=ST.S[id],mx=Math.max(s,v);if(mx>0){e+=1-Math.abs(s-v)/mx;n++}}
+ if(!k){toast("Escriba al menos un conteo");return}var ts=Date.now(),first=!ST.conteos.length;put("conteos",{id:"c"+ts,ts:ts,fecha:iso(),q:q,ex:first||!n?null:e/n});ST.cm=false;ST.cnt={};render();toast("Conteo guardado ("+k+" producto"+(k>1?"s":"")+")")}
+/* ---------- Más ---------- */
+function sec(k,t,body){var o=ST.mas==k;return'<div class="card"><button class="acc" style="margin:0" onclick="ST.mas='+(o?'null':"'"+k+"'")+';render()"><b>'+t+'</b> '+(o?"▲":"▼")+'</button>'+(o?'<div style="margin-top:8px">'+body+'</div>':'')+'</div>'}
+function vMas(){var h="";
+ var imp='<div class="sm" style="margin-bottom:8px">1) Descargue la plantilla y llénela con Excel. 2) Guárdela con «Guardar como» → <b>CSV</b>. 3) Súbala aquí. Si el código o el nombre ya existe, se actualiza; si no, se agrega.</div><button class="btn o" onclick="tpl()">Descargar plantilla CSV</button><label style="margin-top:8px">Archivo CSV con sus productos</label><input type="file" accept=".csv,.txt,text/csv" onchange="leeCSV(this)">';
+ if(ST.imp){var I=ST.imp;imp+='<div class="msg m-g" style="margin-top:8px"><b>'+esc(I.name)+'</b><br>'+I.items.length+' producto(s) leídos: <b>'+I.nuevos+' nuevos</b>, '+I.act+' por actualizar'+(I.omit?', '+I.omit+' omitidos (sin nombre)':'')+'.'+(I.conStock?'<br>El stock del archivo reemplaza el stock actual de esos '+I.conStock+' productos.':'')+'</div>'+I.items.slice(0,4).map(function(x){return'<div class="item"><span>'+esc(x.n)+'<br><small>'+esc(x.cod||"sin código")+' · '+esc(x.u||"und")+(x.s!=null?' · stock '+f(x.s):'')+'</small></span></div>'}).join("")+'<button class="btn" onclick="aplicaImp()">Importar ahora</button><button class="btn o" onclick="ST.imp=null;render()">Cancelar</button>'}
+ h+=sec("imp","Importar productos desde CSV",imp);
+ h+=sec("exp","Exportar inventario a CSV",'<div class="sm" style="margin-bottom:6px">Descarga la lista con el stock actual y el estado de cada producto, para abrirla en Excel.</div><button class="btn o" onclick="expCSV()">Descargar inventario</button>');
+ h+=sec("prov","Proveedores",ST.cfg.pvs.length?ST.cfg.pvs.map(function(p){return'<div class="item"><span>'+esc(p.n)+'<br><small>RUC '+esc(p.ruc)+'</small></span></div>'}).join(""):'<div class="sm">Se agregan al registrar la primera factura.</div>');
+ h+=sec("resp","Respaldo de datos",'<div class="sm" style="margin-bottom:6px">Los datos se guardan solo en este celular. Haga un respaldo cada semana.</div><button class="btn o" onclick="expo()">Descargar respaldo</button><label style="margin-top:8px">Restaurar desde un respaldo (pegar el contenido)</label><textarea id="imp" rows="3"></textarea><button class="btn o" onclick="impo()">Restaurar</button>');
+ h+=sec("dat","Datos de prueba",'<div class="sm" style="margin-bottom:6px">Cargue productos de ejemplo (librería y ferretería) para probar, o borre todo para empezar de cero. Descargue antes un respaldo.</div><button class="btn o" onclick="loadEj()">Cargar productos de ejemplo</button><button class="btn d" onclick="wipe()">'+(ST.conf=="wipe"?"Tocar de nuevo para borrar todo":"Borrar todos los datos")+'</button>');
+ h+=sec("nov","Novedades",NOV.map(function(n){return'<div class="item"><span><b>v'+n[0]+'</b><br><small>'+esc(n[1])+'</small></span></div>'}).join("")+'<div class="sm">Versión actual: v'+VER+'</div>');
+ h+='<div class="card" style="text-align:center"><img src="logo-horizontal.png" alt="Smart Stock Tienda" style="max-width:80%;height:auto"><div class="sm" style="margin-top:6px">v'+VER+' · © 2026 '+(TITULAR?esc(TITULAR)+'. ':'Smart Stock Tienda. ')+'Todos los derechos reservados.</div></div>';return h}
+/* ---------- CSV ---------- */
+function parseCSV(t){t=t.replace(/^\uFEFF/,"");var fl=t.split(/\r?\n/)[0]||"",d=(fl.split(";").length>fl.split(",").length)?";":",";var rows=[],r=[],c="",q=false;
+ for(var i=0;i<t.length;i++){var ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==d){r.push(c);c=""}else if(ch=="\n"||ch=="\r"){if(ch=="\r"&&t[i+1]=="\n")i++;r.push(c);c="";if(r.some(function(x){return x.trim()!==""}))rows.push(r);r=[]}else c+=ch}
+ r.push(c);if(r.some(function(x){return x.trim()!==""}))rows.push(r);return rows}
+var HM={cod:["codigo","cod","sku","code","codigo de barras"],n:["producto","nombre","descripcion","articulo","item"],u:["unidad","um","medida","unidad de medida"],cat:["categoria","rubro","linea","familia"],s:["stock","stock actual","cantidad","existencia","existencias"],min:["minimo","stock minimo","min"],max:["maximo","stock maximo","max","objetivo"],pr:["costo","precio compra","precio de compra","costo unitario"],pv:["precio","precio venta","precio de venta","pvp"],prov:["proveedor"]};
+function leeCSV(inp){var fl=inp.files[0];if(!fl)return;var r=new FileReader();r.onload=function(){var t=String(r.result);if(t.indexOf("\uFFFD")>=0){var r2=new FileReader();r2.onload=function(){prev(String(r2.result),fl.name)};r2.readAsText(fl,"windows-1252")}else prev(t,fl.name)};r.onerror=function(){toast("No se pudo leer el archivo")};r.readAsText(fl)}
+function prev(t,name){var rows=parseCSV(t);if(rows.length<2){toast("El archivo está vacío o no tiene filas");return}var hd=rows[0].map(norm).map(function(x){return x.trim()}),ix={};
+ for(var k in HM){ix[k]=-1;HM[k].forEach(function(a){var j=hd.indexOf(a);if(j>=0&&ix[k]<0)ix[k]=j})}
+ if(ix.n<0){toast("No encuentro la columna «producto». Use la plantilla.");return}
+ var by={},byn={};ST.cfg.prods.forEach(function(p){if(p.cod)by[norm(p.cod)]=1;byn[norm(p.n)]=1});
+ var items=[],omit=0,nuevos=0,act=0,cs=0,seen={};
+ rows.slice(1).forEach(function(r){var g=function(k){return ix[k]>=0&&r[ix[k]]!=null?String(r[ix[k]]).trim():""};var n=g("n");if(!n){omit++;return}
+  var x={n:n,cod:g("cod"),u:g("u"),cat:g("cat"),prov:g("prov"),s:num(g("s")),min:num(g("min")),max:num(g("max")),pr:num(g("pr")),pv:num(g("pv"))};
+  var key=norm(x.cod||x.n);if(seen[key])return;seen[key]=1;if((x.cod&&by[norm(x.cod)])||byn[norm(n)])act++;else nuevos++;if(x.s!=null)cs++;items.push(x)});
+ if(!items.length){toast("No hay productos válidos en el archivo");return}
+ if(items.length+ST.cfg.prods.length>5000){toast("Máximo recomendado: 5000 productos");return}
+ ST.imp={name:name,items:items,nuevos:nuevos,act:act,omit:omit,conStock:cs};ST.mas="imp";render()}
+function aplicaImp(){var it=ST.imp.items,by={},byn={},now=Date.now(),q={},nn=0,na=0;ST.cfg.prods.forEach(function(p){if(p.cod)by[norm(p.cod)]=p;byn[norm(p.n)]=p});
+ it.forEach(function(x,k){var p=(x.cod&&by[norm(x.cod)])||byn[norm(x.n)];if(!p){p={id:"p"+now+"_"+k,s0:0,min:0,max:0,pr:0,pv:0};ST.cfg.prods.push(p);nn++;if(x.cod)by[norm(x.cod)]=p;byn[norm(x.n)]=p}else na++;
+  p.n=x.n;if(x.cod)p.cod=x.cod;p.u=x.u||p.u||"und";if(x.cat)p.cat=x.cat;if(x.min!=null)p.min=x.min;if(x.max!=null)p.max=x.max;if(x.pr!=null)p.pr=x.pr;if(x.pv!=null)p.pv=x.pv;if(x.prov)p.prov=x.prov;if(x.s!=null&&x.s>=0)q[p.id]=x.s});
+ saveCfg();if(Object.keys(q).length)put("conteos",{id:"c"+now,ts:now,fecha:iso(),q:q,ex:null});ST.imp=null;ST.mas=null;ST.tab="stk";render();toast(nn+" nuevos, "+na+" actualizados")}
+function cesc(v){v=String(v==null?"":v);return/[",;\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function bajar(name,text,type){try{var u=URL.createObjectURL(new Blob([text],{type:type})),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);toast("Archivo descargado");return true}catch(e){toast("No se pudo descargar");return false}}
+function tpl(){var t="codigo,producto,unidad,categoria,stock,minimo,maximo,costo,precio,proveedor\nLIB001,Cuaderno A4 cuadriculado 100 hojas,und,Papelería,34,20,80,3.5,6,Distribuidora Ejemplo\nFER001,Cemento 42.5 kg,bolsa,Construcción,60,40,150,26,32,Ferretería Ejemplo\nFER002,Clavo 2 pulgadas,kg,Construcción,9,10,40,5,8,\n";bajar("plantilla-productos-smartstock.csv","\uFEFF"+t,"text/csv")}
+function expCSV(){var t="codigo,producto,unidad,categoria,stock,minimo,maximo,costo,precio,proveedor,estado\n";ST.cfg.prods.forEach(function(p){t+=[p.cod,p.n,p.u,p.cat,ST.S[p.id],p.min,p.max,p.pr,p.pv,p.prov,lab(est(p,ST.S[p.id]))].map(cesc).join(",")+"\n"});bajar("inventario-smartstock-"+iso()+".csv","\uFEFF"+t,"text/csv")}
+var EJ=[["LIB001","Cuaderno A4 cuadriculado 100 hojas","und","Papelería",34,20,80,3.5,6],["LIB002","Lapicero azul (caja x50)","caja","Papelería",3,4,12,18,30],["LIB003","Papel bond A4 (paquete 500 hojas)","paq","Papelería",14,10,40,12.5,18],["LIB004","Folder manila A4","und","Papelería",120,50,200,0.4,1],["LIB005","Tijera escolar","und","Escolar",18,8,30,2.2,5],["FER001","Cemento 42.5 kg","bolsa","Construcción",60,40,150,26,32],["FER002","Clavo 2 pulgadas","kg","Construcción",9,10,40,5,8],["FER003","Tubo PVC 1/2 pulgada x 3 m","und","Gasfitería",45,20,80,4.8,8],["FER004","Cinta métrica 5 m","und","Herramientas",12,6,24,6,12],["FER005","Pintura látex blanco galón","gal","Pintura",7,5,20,38,55],["FER006","Foco LED 9 W","und","Electricidad",80,30,120,3.2,6],["FER007","Alicate universal 8 pulgadas","und","Herramientas",10,4,15,11,20]];
+function loadEj(){var now=Date.now(),q={},by={};ST.cfg.prods.forEach(function(p){if(p.cod)by[p.cod]=1});var n=0;
+ EJ.forEach(function(e,k){if(by[e[0]])return;var id="p"+now+"_"+k;ST.cfg.prods.push({id:id,cod:e[0],n:e[1],u:e[2],cat:e[3],min:e[5],max:e[6],pr:e[7],pv:e[8],s0:0});q[id]=e[4];n++});
+ saveCfg();if(n)put("conteos",{id:"c"+now,ts:now,fecha:iso(),q:q,ex:null});ST.tab="ini";render();toast(n?n+" productos de ejemplo cargados":"Los de ejemplo ya están cargados")}
+function wipe(){if(ST.conf!="wipe"){ST.conf="wipe";render();toast("Toque de nuevo para borrar TODOS los datos");return}
+ ST.conf=null;COLS.forEach(function(c){ST[c]=[];ls(c,[])});ST.cfg=cl(DEF);saveCfg();ST.cart=[];ST.fd=null;ST.cnt={};ST.cm=false;ST.add=false;ST.imp=null;ST.q="";ST.cat="";ST.fil="";ST.tab="ini";render();toast("Datos borrados")}
+function dump(){return JSON.stringify({app:"smartstock-tienda",ver:VER,fecha:iso(),cfg:ST.cfg,salidas:ST.salidas,facturas:ST.facturas,conteos:ST.conteos})}
+function expo(){bajar("smartstock-tienda-respaldo-"+iso()+".json",dump(),"application/json")||(function(){var t=$("imp");if(t){t.value=dump();t.select()}})()}
+function impo(){try{var o=JSON.parse($("imp").value);if(o.app!="smartstock-tienda")throw 0;ST.cfg=o.cfg;saveCfg();COLS.forEach(function(c){ST[c]=o[c]||[];ls(c,ST[c])});render();toast("Respaldo restaurado")}catch(e){toast("El texto no es un respaldo válido de Tienda")}}
+/* ---------- estructura ---------- */
+var TABS=[["ini","Inicio"],["sal","Salidas"],["com","Compras"],["stk","Stock"],["mas","Más"]];
+function render(){ST.S=stockAll();var v={ini:vIni,sal:vSal,com:vCom,stk:vStk,mas:vMas}[ST.tab];$("app").innerHTML=v();
+ $("tabs").innerHTML=TABS.map(function(t){return'<button class="'+(ST.tab==t[0]?"on":"")+'" onclick="go(\''+t[0]+'\')">'+t[1]+'</button>'}).join("");
+ $("ver").textContent=VER;if(ST.tab=="com"&&ST.sub=="nue")tot();if(ST.tab=="sal")totS()}
+function go(t){ST.tab=t;ST.op=null;ST.conf=null;render();window.scrollTo(0,0)}
+loadLocal();render();
+if("serviceWorker" in navigator){var hadSW=!!navigator.serviceWorker.controller,swReg=null;
+ navigator.serviceWorker.register("sw.js").then(function(r){swReg=r}).catch(function(){});
+ navigator.serviceWorker.addEventListener("controllerchange",function(){if(hadSW)$("upd").className="on"});
+ document.addEventListener("visibilitychange",function(){if(!document.hidden&&swReg)swReg.update().catch(function(){})})}
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){});
+</script>
+</body>
+</html>
